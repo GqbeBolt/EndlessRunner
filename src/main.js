@@ -17,6 +17,3 @@ let config = {
 };
 
 let game = new Phaser.Game(config);
-
-// reserve keyboard bindings
-let keySPACE;

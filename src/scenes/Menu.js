@@ -26,12 +26,11 @@ class Menu extends Phaser.Scene {
         this.add.text(game.config.width/2, game.config.height/2, "Press SPACE", menuConfig).setOrigin(0.5);
 
         // define keys
-        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+        this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
-            // easy mode
+        if (Phaser.Input.Keyboard.JustDown(this.keySPACE)) {
             this.scene.start('playScene'); 
         }
         
