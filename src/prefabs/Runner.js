@@ -20,12 +20,15 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         //     blue: new BlueState()
         // }, [scene, this])
     
+        this.jumpStrength = 1000;
+        this.jumpRecoil = 5;
     }
 }
 
 class RunningState extends State {
     enter(scene, runner) {
         runner.setVelocity(0);
+        console.log("run")
     }
 
     execute(scene, runner) {
@@ -39,12 +42,40 @@ class RunningState extends State {
 
 class JumpState extends State {
     enter(scene, runner) {
-        runner.setVelocity(0, -1000);
+        runner.setVelocity(0, -runner.jumpStrength);
         console.log("jump");
     }
 
     execute(scene, runner) {
-        
+        if (Phaser.Input.Keyboard.JustUp(scene.keySPACE)) {
+            runner.setVelocityY(runner.body.velocity.y / runner.jumpRecoil);
+            this.stateMachine.transition("falling");
+            return;
+        }
+
+        // alt way to get into falling, separate if statement so there isnt weird behavior 
+        // with the setVelocityY func
+        if (runner.body.velocity.y >= 0) {
+            this.stateMachine.transition("falling");
+            return;
+        }
+
+        // low chance this will happen, but small chance
+        if (runner.body.onFloor()) {    
+            this.stateMachine.transition("running");
+        }
+    }
+}
+
+class FallingState extends State {
+    enter(scene, runner) {
+        console.log("fall");
+    }
+
+    execute(scene, runner) {
+        if (runner.body.onFloor()) {
+            this.stateMachine.transition("running");
+        }
     }
 }
 
