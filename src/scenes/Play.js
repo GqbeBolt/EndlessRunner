@@ -8,17 +8,19 @@ class Play extends Phaser.Scene {
 
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
+        
+    }
+
+    update() {
+        this.runnerState.step();
+        //this.colorState.step();
+
         this.physics.world.on("worldbounds", (body, up, down, left, right) => {
             console.log("ahhhh");
             if (down) {
                 console.log("ket");
             }
         })
-    }
-
-    update() {
-        this.runnerState.step();
-        //this.colorState.step();
     }
     
 }
