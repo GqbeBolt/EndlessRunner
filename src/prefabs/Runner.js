@@ -11,7 +11,8 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         
         scene.runnerState = new StateMachine("running", {
             running: new RunningState(),
-            jumping: new JumpState()
+            jumping: new JumpState(),
+            falling: new FallingState()
         }, [scene, this]);
 
         // scene.colorState = new StateMachine("red", {
