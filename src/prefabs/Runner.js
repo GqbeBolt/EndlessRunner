@@ -7,7 +7,6 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
         
         this.body.setCollideWorldBounds(true);
-        this.body.setGravityY(2000);
         
         scene.runnerState = new StateMachine("running", {
             running: new RunningState(),
@@ -15,13 +14,14 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             falling: new FallingState()
         }, [scene, this]);
 
-        // scene.colorState = new StateMachine("red", {
-        //     red: new RedState(),
-        //     blue: new BlueState()
-        // }, [scene, this])
+        scene.colorState = new StateMachine("blue", {
+            red: new RedState(),
+            blue: new BlueState()
+        }, [scene, this])
     
         this.jumpStrength = 1000;
-        this.jumpRecoil = 5;
+        this.jumpRecoil = 3;
+        this.gravity = 2000;
     }
 }
 
@@ -42,7 +42,12 @@ class RunningState extends State {
 
 class JumpState extends State {
     enter(scene, runner) {
-        runner.setVelocity(0, -runner.jumpStrength);
+        if (scene.colorState.state == "blue") {
+            runner.setVelocity(0, -runner.jumpStrength);
+        } else {
+            runner.setVelocity(0, runner.jumpStrength);
+        }
+        
         console.log("jump");
     }
 
@@ -53,17 +58,33 @@ class JumpState extends State {
             return;
         }
 
-        // alt way to get into falling, separate if statement so there isnt weird behavior 
-        // with the setVelocityY func
-        if (runner.body.velocity.y >= 0) {
-            this.stateMachine.transition("falling");
-            return;
+        if (scene.colorState.state == "blue") {
+            // alt way to get into falling, separate if statement so there isnt weird behavior 
+            // with the setVelocityY func
+            if (runner.body.velocity.y >= 0) {
+                this.stateMachine.transition("falling");
+                return;
+            }
+
+            // low chance this will happen, but small chance
+            if (runner.body.onFloor()) {    
+                this.stateMachine.transition("running");
+            }
+        } else {
+            // alt way to get into falling, separate if statement so there isnt weird behavior 
+            // with the setVelocityY func
+            if (runner.body.velocity.y <= 0) {
+                this.stateMachine.transition("falling");
+                return;
+            }
+
+            // low chance this will happen, but small chance
+            if (runner.body.onCeiling()) {    
+                this.stateMachine.transition("running");
+            }
         }
 
-        // low chance this will happen, but small chance
-        if (runner.body.onFloor()) {    
-            this.stateMachine.transition("running");
-        }
+        
     }
 }
 
@@ -73,28 +94,41 @@ class FallingState extends State {
     }
 
     execute(scene, runner) {
-        if (runner.body.onFloor()) {
-            this.stateMachine.transition("running");
+        if (scene.colorState.state == "blue") {
+            if (runner.body.onFloor()) {
+                this.stateMachine.transition("running");
+            }
+        } else {
+            if (runner.body.onCeiling()) {
+                this.stateMachine.transition("running");
+            }
         }
+        
     }
 }
 
 class RedState extends State {
     enter(scene, runner) {
-
+        runner.body.setGravityY(-Math.abs(runner.gravity));
+        runner.setTint(0xFF0000);
     }
 
     execute(scene, runner) {
-        // handle transitions
+        if (Phaser.Input.Keyboard.JustDown(scene.keyE)) {
+            this.stateMachine.transition("blue");
+        }
     }
 }
 
 class BlueState extends State {
     enter(scene, runner) {
-
+        runner.body.setGravityY(Math.abs(runner.gravity));
+        runner.setTint(0x0000FF);
     }
 
     execute(scene, runner) {
-        // handle transitions
+        if (Phaser.Input.Keyboard.JustDown(scene.keyE)) {
+            this.stateMachine.transition("red");
+        }
     }
 }
