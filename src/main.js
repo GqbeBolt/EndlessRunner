@@ -4,9 +4,10 @@ Game Name: Duality
 */
 let config = {
     type: Phaser.AUTO,
-    width: 640,
-    height: 480,
+    width: 600,
+    height: 375,
     pixelArt: true,
+    zoom: 1.25,
     physics: {
         default: "arcade",
         arcade: {

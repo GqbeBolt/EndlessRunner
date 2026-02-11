@@ -36,6 +36,11 @@ class RunningState extends State {
         
         if (Phaser.Input.Keyboard.JustDown(scene.keySPACE)) {
             this.stateMachine.transition("jumping");
+            return;
+        }
+
+        if (Math.abs(runner.body.velocity.y) > 0.01) {
+            this.stateMachine.transition("falling");
         }
     }
 }
