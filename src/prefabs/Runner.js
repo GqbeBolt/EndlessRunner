@@ -19,8 +19,8 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             blue: new BlueState()
         }, [scene, this])
     
-        this.jumpStrength = 1000;
-        this.jumpRecoil = 3;
+        this.jumpStrength = 850;
+        this.jumpRecoil = 4;
         this.gravity = 2000;
     }
 }
