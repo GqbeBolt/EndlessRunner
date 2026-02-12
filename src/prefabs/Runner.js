@@ -14,14 +14,48 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             falling: new FallingState()
         }, [scene, this]);
 
-        scene.colorState = new StateMachine("blue", {
-            red: new RedState(),
+        scene.runnerColor = new StateMachine("blue", {
+        red: new RedState(),
             blue: new BlueState()
         }, [scene, this])
     
+        // jump / gravity
         this.jumpStrength = 900;
-        this.jumpRecoil = 4;
+        this.jumpRecoil = 4;    // higher number = faster the runner stops when letting go of space
         this.gravity = 2200;
+
+        // grav switching
+        this.gravCooldownTime = 2000;   // must be a second exactly for flashing to work
+        this.numFlashes = 3;    
+        this.gravCooldown = false;
+
+        // colors
+        this.redTint = 0xFF0000;
+        this.blueTint = 0x0000FF;
+        this.flashTint = 0xFACADE;
+
+        // other
+        this.justSpawned = true;
+    }
+
+    initGravCooldown(prevTint, scene) {
+        this.gravCooldown = true;
+        this.cooldownTimer = scene.time.delayedCall(this.gravCooldownTime, () => {
+            this.gravCooldown = false;
+        }, null, this);
+        this.flashingTimer = scene.time.addEvent({
+            delay: this.gravCooldownTime / (this.numFlashes*2),
+            callback: () => {
+                if (this.tintTopLeft == prevTint) {
+                    this.setTint(this.flashTint);
+                } else {
+                    this.setTint(prevTint);
+                }
+            },
+            callbackScope: this,
+            repeat: (this.numFlashes*2)-1
+        })
+
     }
 }
 
@@ -47,7 +81,7 @@ class RunningState extends State {
 
 class JumpState extends State {
     enter(scene, runner) {
-        if (scene.colorState.state == "blue") {
+        if (scene.runnerColor.state == "blue") {
             runner.setVelocity(0, -runner.jumpStrength);
         } else {
             runner.setVelocity(0, runner.jumpStrength);
@@ -63,7 +97,7 @@ class JumpState extends State {
             return;
         }
 
-        if (scene.colorState.state == "blue") {
+        if (scene.runnerColor.state == "blue") {
             
             if (runner.body.velocity.y >= 0) {
                 this.stateMachine.transition("falling");
@@ -89,7 +123,7 @@ class FallingState extends State {
     }
 
     execute(scene, runner) {
-        if (scene.colorState.state == "blue") {
+        if (scene.runnerColor.state == "blue") {
             if (runner.body.onFloor()) {
                 this.stateMachine.transition("running");
             }
@@ -105,11 +139,12 @@ class FallingState extends State {
 class RedState extends State {
     enter(scene, runner) {
         runner.body.setGravityY(-Math.abs(runner.gravity));
-        runner.setTint(0xFF0000);
+        runner.setTint(runner.redTint);
+        runner.initGravCooldown(runner.redTint, scene);
     }
 
     execute(scene, runner) {
-        if (Phaser.Input.Keyboard.JustDown(scene.keyE)) {
+        if (!runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
             this.stateMachine.transition("blue");
         }
     }
@@ -118,11 +153,17 @@ class RedState extends State {
 class BlueState extends State {
     enter(scene, runner) {
         runner.body.setGravityY(Math.abs(runner.gravity));
-        runner.setTint(0x0000FF);
+        runner.setTint(runner.blueTint);
+        if (!runner.justSpawned) {
+            runner.initGravCooldown(runner.blueTint, scene);
+        } else {
+            runner.justSpawned = false;
+        }
+         
     }
 
     execute(scene, runner) {
-        if (Phaser.Input.Keyboard.JustDown(scene.keyE)) {
+        if (!runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
             this.stateMachine.transition("red");
         }
     }

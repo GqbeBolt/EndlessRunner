@@ -12,8 +12,7 @@ class Play extends Phaser.Scene {
 
     update() {
         this.runnerState.step();
-        this.colorState.step();
-
+        this.runnerColor.step();
     }
     
 }
