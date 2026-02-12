@@ -19,9 +19,9 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             blue: new BlueState()
         }, [scene, this])
     
-        this.jumpStrength = 850;
+        this.jumpStrength = 900;
         this.jumpRecoil = 4;
-        this.gravity = 2000;
+        this.gravity = 2200;
     }
 }
 
@@ -64,29 +64,19 @@ class JumpState extends State {
         }
 
         if (scene.colorState.state == "blue") {
-            // alt way to get into falling, separate if statement so there isnt weird behavior 
-            // with the setVelocityY func
+            
             if (runner.body.velocity.y >= 0) {
                 this.stateMachine.transition("falling");
                 return;
             }
 
-            // low chance this will happen, but small chance
-            if (runner.body.onFloor()) {    
-                this.stateMachine.transition("running");
-            }
         } else {
-            // alt way to get into falling, separate if statement so there isnt weird behavior 
-            // with the setVelocityY func
+            
             if (runner.body.velocity.y <= 0) {
                 this.stateMachine.transition("falling");
                 return;
             }
 
-            // low chance this will happen, but small chance
-            if (runner.body.onCeiling()) {    
-                this.stateMachine.transition("running");
-            }
         }
 
         
