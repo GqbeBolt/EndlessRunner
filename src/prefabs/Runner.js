@@ -23,6 +23,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         this.jumpStrength = 900;
         this.jumpRecoil = 4;    // higher number = faster the runner stops when letting go of space
         this.gravity = 2200;
+        this.coyoteTime = 200; // in ms
 
         // grav switching
         this.gravCooldownTime = 2000;   // must be a second exactly for flashing to work
@@ -30,9 +31,9 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         this.gravCooldown = false;
 
         // colors
-        this.redTint = 0xFF0000;
-        this.blueTint = 0x0000FF;
-        this.flashTint = 0xFACADE;
+        this.redTint = scene.redHex;
+        this.blueTint = scene.blueHex;
+        this.flashTint = scene.pinkHex;
 
         // other
         this.justSpawned = true;
@@ -74,7 +75,10 @@ class RunningState extends State {
         }
 
         if (Math.abs(runner.body.velocity.y) > 0.01) {
-            this.stateMachine.transition("falling");
+            scene.time.delayedCall(runner.coyoteTime, () => {
+                this.stateMachine.transition("falling");
+            }, null, this);
+            
         }
     }
 }

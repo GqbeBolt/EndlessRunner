@@ -11,10 +11,11 @@ let config = {
     physics: {
         default: "arcade",
         arcade: {
-            debug: true
+            debug: false
         }
     },
     scene: [ Menu, Play ],
 };
 
 let game = new Phaser.Game(config);
+let {width, height} = game.config;
