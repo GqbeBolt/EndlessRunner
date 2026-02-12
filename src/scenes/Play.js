@@ -19,7 +19,11 @@ class Play extends Phaser.Scene {
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
         this.runner = new Runner(this, this.runnerX, 500, "runner", 0);
-        this.plat = new Platform(this, this.runnerX, height/2, 100, 100, "red");
+        this.plat = new Platform(this, 100, 100, 100, 100, "red");
+
+        for (let i=0;i<=600;i+=50) {
+            this.add.rectangle(50, i, 5, 5, 0xFFFFFF).setOrigin(0, 0);
+        }
 
         // this.platforms = this.add.group();
         // this.platforms.add(this.plat);

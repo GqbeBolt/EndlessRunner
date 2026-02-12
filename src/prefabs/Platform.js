@@ -3,9 +3,8 @@ class Platform{
         //super(scene, x, y, "platform", 0);
 
         
-        let currCorner = scene.add.sprite(x, y, "platCorner");
-        console.log(currCorner.height);
-        let currSide = scene.add.tileSprite(x, y+50, 10, height-20, "platSide");
+        let currCorner = scene.add.sprite(x, y, "platCorner").setOrigin(0);
+        let currSide = scene.add.tileSprite(x, y+10, 10, height-20, "platSide").setOrigin(0);
         
         
 
