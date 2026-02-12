@@ -7,6 +7,8 @@ class Menu extends Phaser.Scene {
         this.load.path = "./assets/"
         this.load.image("runner", "RunnerTEMP.png");
         this.load.image("platform", "DefaultPlat.png");
+        this.load.image("platCorner", "PlatCorner.png");
+        this.load.image("platSide", "PlatSide.png");
     }
 
     create() {
