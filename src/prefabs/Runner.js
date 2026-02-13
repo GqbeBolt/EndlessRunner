@@ -23,7 +23,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         this.jumpStrength = 800;
         this.jumpRecoil = 4;    // higher number = faster the runner stops when letting go of space
         this.gravity = 2200;
-        this.coyoteTime = 200; // in ms
+        this.coyoteTime = 100; // in ms
 
         // grav switching
         this.gravCooldownTime = 2000;   // must be a second exactly for flashing to work
@@ -150,6 +150,8 @@ class RedState extends State {
     execute(scene, runner) {
         if (!runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
             this.stateMachine.transition("blue");
+        } else if (runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
+            scene.shakeCamera(75, 0.005);
         }
     }
 }
@@ -169,6 +171,8 @@ class BlueState extends State {
     execute(scene, runner) {
         if (!runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
             this.stateMachine.transition("red");
+        } else if (runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
+            scene.shakeCamera(75, 0.005);
         }
     }
 }
