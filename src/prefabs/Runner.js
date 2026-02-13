@@ -20,7 +20,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         }, [scene, this])
     
         // jump / gravity
-        this.jumpStrength = 900;
+        this.jumpStrength = 800;
         this.jumpRecoil = 4;    // higher number = faster the runner stops when letting go of space
         this.gravity = 2200;
         this.coyoteTime = 200; // in ms
