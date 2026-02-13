@@ -18,15 +18,13 @@ class Play extends Phaser.Scene {
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
 
+        //this.add.rectangle(96, 96, 108, 108, this.redHex).setOrigin(0);
+
         this.runner = new Runner(this, this.runnerX, 500, "runner", 0);
-        this.plat = new Platform(this, 100, 100, 100, 100, "red");
+        this.plat = new Platform(this, 100, 100, 300, 150, "blue");
 
-        for (let i=0;i<=600;i+=50) {
-            this.add.rectangle(50, i, 5, 5, 0xFFFFFF).setOrigin(0, 0);
-        }
-
-        // this.platforms = this.add.group();
-        // this.platforms.add(this.plat);
+        this.platforms = this.add.group();
+        this.platforms.add(this.plat.container);
 
         // set up colliders
         this.physics.add.collider(this.runner, this.platforms);

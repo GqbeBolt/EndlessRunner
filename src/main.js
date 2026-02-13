@@ -7,7 +7,7 @@ let config = {
     width: 600,
     height: 375,
     pixelArt: true,
-    zoom: 1.25,
+    zoom: 1.5,
     physics: {
         default: "arcade",
         arcade: {
