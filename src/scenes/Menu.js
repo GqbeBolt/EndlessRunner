@@ -9,6 +9,9 @@ class Menu extends Phaser.Scene {
         //this.load.image("platform", "DefaultPlat.png"); unused now
         this.load.image("platCorner", "PlatCorner.png");
         this.load.image("platSide", "PlatSide.png");
+        this.load.image("smallStar", "smallStar.png");
+        this.load.image("bigStar", "bigStar.png");
+        this.load.image("spaceBG", "SpaceBackground.png");
     }
 
     create() {
