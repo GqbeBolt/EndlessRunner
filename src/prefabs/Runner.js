@@ -15,19 +15,19 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         }, [scene, this]);
 
         scene.runnerColor = new StateMachine("blue", {
-        red: new RedState(),
+            red: new RedState(),
             blue: new BlueState()
         }, [scene, this])
     
         // jump / gravity
-        this.jumpStrength = 800;
+        this.jumpStrength = 650;
         this.jumpRecoil = 4;    // higher number = faster the runner stops when letting go of space
-        this.gravity = 2200;
+        this.gravity = 1650;
         this.coyoteTime = 100; // in ms
 
         // grav switching
-        this.gravCooldownTime = 2000;   // must be a second exactly for flashing to work
-        this.numFlashes = 3;    
+        this.gravCooldownTime = 1000;  
+        this.numFlashes = 2;    
         this.gravCooldown = false;
 
         // colors
