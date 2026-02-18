@@ -14,6 +14,7 @@ let config = {
             debug: false
         }
     },
+    fps: 60,
     scene: [ Menu, Play ],
 };
 

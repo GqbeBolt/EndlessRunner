@@ -9,14 +9,13 @@ class Play extends Phaser.Scene {
         this.runnerX = 150;
         this.moveSpeed = 200;
         this.spawnPlat = undefined;
-        this.particleSpeedMin = -200;
-        this.particleSpeedMax = -300; 
+        this.particleSpeedMax = -430; 
 
         // global colors
         this.redHex = 0xFF153F;
         this.blueHex = 0X00FFF7;
         this.pinkHex = 0xFACADE;
-        this.cameras.main.setBackgroundColor(0x06060A);
+        this.cameras.main.setBackgroundColor(0x2E242A);
 
         // global keybinds
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -24,23 +23,16 @@ class Play extends Phaser.Scene {
 
         // space bg
         this.bg = this.add.tileSprite(0, 0, width, height, "spaceBG").setOrigin(0);
-        this.bg.alpha = 1;
+        this.bg.alpha = 0.08;
 
         // star particles
         let startLine = new Phaser.Geom.Line(width, 0, width, height)  
         const deathBox = new Phaser.Geom.Rectangle(-1, 0, 1, height);
         this.starEmitter = this.add.particles(0, 0, "smallStar", {
-            speedX: {
-                min: this.particleSpeedMin,
-                max: this.particleSpeedMax,
-                int: true
-            },
+            alpha: 1,
+            speedX: 0,
             frequency: 80,
-            lifespan: 10000,
-            alpha: {
-                min: 0.2,
-                max: 0.8
-            },
+            lifespan: 100000,
             deathZone: deathBox,
             tint: [ 0xffffff, this.pinkHex ],
             emitZone: { 
@@ -48,20 +40,19 @@ class Play extends Phaser.Scene {
                 source: startLine
             },
             blendMode: 'ADD',
+            emitCallback: (particle) => {
+                let a = Phaser.Math.FloatBetween(0.2, 0.7);
+
+                particle.alpha = a;
+                particle.velocityX = a * this.particleSpeedMax;
+            }
         })
 
         this.bigStarEmitter = this.add.particles(0, 0, "bigStar", {
-            speedX: {
-                min: this.particleSpeedMin,
-                max: this.particleSpeedMax,
-                int: true
-            },
+            alpha: 1,
+            speedX: 0,
             frequency: 120,
-            lifespan: 10000,
-            alpha: {
-                min: 0.2,
-                max: 0.6
-            },
+            lifespan: 100000,
             deathZone: deathBox,
             tint: [ 0xffffff, this.pinkHex ],
             emitZone: { 
@@ -69,9 +60,13 @@ class Play extends Phaser.Scene {
                 source: startLine
             },
             blendMode: 'ADD',
-        })
+            emitCallback: (particle) => {
+                let a = Phaser.Math.FloatBetween(0.05, 1);
 
-        console.log(this.starEmitter);
+                particle.alpha = a;
+                particle.velocityX = a * this.particleSpeedMax;
+            }
+        })
 
         // add main character
         this.runner = new Runner(this, this.runnerX, height / 2, "runner", 0);
@@ -101,7 +96,7 @@ class Play extends Phaser.Scene {
             this.platSpawner.spawnNew(this.moveSpeed);
         }
 
-        this.bg.tilePositionX += 4;
+        this.bg.tilePositionX += 0.5;
 
     }
 
