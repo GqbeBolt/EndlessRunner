@@ -3,8 +3,7 @@ class Play extends Phaser.Scene {
         super("playScene");
     }
 
-    create() {
-        
+    init () {
         // game stats
         this.runnerX = 150;
         this.moveSpeed = 200;
@@ -26,7 +25,9 @@ class Play extends Phaser.Scene {
         // global keybinds
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+    }
 
+    create() {
         // space bg
         this.bg = this.add.tileSprite(0, 0, width, height, "spaceBG").setOrigin(0);
         this.bg.alpha = 0.08;
@@ -118,7 +119,7 @@ class Play extends Phaser.Scene {
         // if blocked right or out of bounds
         if (this.runner.body.blocked.right || this.runner.y > height + this.boundsLeeway || this.runner.y + this.runner.height < 0 - this.boundsLeeway) {
             this.scene.pause();
-            this.scene.launch("deathScene");
+            this.scene.launch("deathScene", {scene: this});
         }
 
         this.bg.tilePositionX += 0.5 + this.speedFactor/4;           

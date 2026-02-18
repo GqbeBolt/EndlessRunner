@@ -3,7 +3,10 @@ class Death extends Phaser.Scene {
         super("deathScene");
     }
 
-    create() {
+    create(data) {
+
+        this.playScene = data.scene;
+        console.log(this.playScene);
 
         let menuConfig = {
             fontFamily: "Courier",
@@ -32,6 +35,8 @@ class Death extends Phaser.Scene {
         }
         
         if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
+            console.log(this.playScene);
+            this.playScene.stop();
             this.scene.start('menuScene'); 
         }
         
