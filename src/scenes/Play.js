@@ -10,6 +10,12 @@ class Play extends Phaser.Scene {
         this.moveSpeed = 200;
         this.spawnPlat = undefined;
         this.particleSpeedMax = -430; 
+        this.speedFactor = 1;
+        this.speedUpFrequency = 5;
+        this.maxSpeedFactor = 2.5;
+        this.speedInterval = 0.2;
+        this.totalPlatformPredefs = 0;
+        this.boundsLeeway = 50;
 
         // global colors
         this.redHex = 0xFF153F;
@@ -44,7 +50,7 @@ class Play extends Phaser.Scene {
                 let a = Phaser.Math.FloatBetween(0.2, 0.7);
 
                 particle.alpha = a;
-                particle.velocityX = a * this.particleSpeedMax;
+                particle.velocityX = a * this.particleSpeedMax * this.speedFactor;
             }
         })
 
@@ -64,7 +70,7 @@ class Play extends Phaser.Scene {
                 let a = Phaser.Math.FloatBetween(0.05, 1);
 
                 particle.alpha = a;
-                particle.velocityX = a * this.particleSpeedMax;
+                particle.velocityX = a * this.particleSpeedMax * this.speedFactor;
             }
         })
 
@@ -93,10 +99,29 @@ class Play extends Phaser.Scene {
 
         // checking to spawn new platforms
         if (this.spawnPlat.container.x + this.spawnPlat.container.width < width) {
-            this.platSpawner.spawnNew(this.moveSpeed);
+            this.totalPlatformPredefs++;
+
+            //checking to speed up
+            if (this.speedFactor < this.maxSpeedFactor && this.totalPlatformPredefs % this.speedUpFrequency == 0) {
+                this.speedFactor += this.speedInterval;
+                // update current platforms
+                this.platforms.children.each( (plat) => {
+                    console.log((-this.moveSpeed * this.speedFactor));
+                    plat.body.setVelocity(-this.moveSpeed * this.speedFactor, 0);
+                })
+            }
+
+            this.platSpawner.spawnNew(this.moveSpeed * this.speedFactor);
         }
 
-        this.bg.tilePositionX += 0.5;
+        // checking for death
+        // if blocked right or out of bounds
+        if (this.runner.body.blocked.right || this.runner.y > height + this.boundsLeeway || this.runner.y + this.runner.height < 0 - this.boundsLeeway) {
+            this.scene.pause();
+            this.scene.launch("deathScene");
+        }
+
+        this.bg.tilePositionX += 0.5 + this.speedFactor/4;           
 
     }
 
