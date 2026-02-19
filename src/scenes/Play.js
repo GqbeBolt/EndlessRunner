@@ -6,7 +6,7 @@ class Play extends Phaser.Scene {
     init () {
         // player
         this.runnerX = 150;
-        this.boundsLeeway = 50;
+        this.boundsLeeway = 150;
 
         // speed
         this.particleSpeedMax = -430; 
@@ -15,6 +15,7 @@ class Play extends Phaser.Scene {
         this.speedUpFrequency = 5;
         this.maxSpeedFactor = 2;
         this.speedInterval = 0.2;
+        this.distPerSpeedBoost = 20;    
 
         // platforms
         this.spawnPlat = undefined;
@@ -132,6 +133,7 @@ class Play extends Phaser.Scene {
             //checking to speed up
             if (this.speedFactor < this.maxSpeedFactor && this.totalPlatformPredefs % this.speedUpFrequency == 0) {
                 this.speedFactor += this.speedInterval;
+                this.platSpawner.addExtraDistance(this.distPerSpeedBoost);
                 // update current platforms
                 this.platforms.children.each( (plat) => {
                     console.log((-this.moveSpeed * this.speedFactor));
