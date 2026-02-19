@@ -3,18 +3,30 @@ class Menu extends Phaser.Scene {
         super("menuScene");
     }
 
-    preload() {
-        this.load.path = "./assets/"
-        this.load.image("runner", "RunnerTEMP.png");
-        //this.load.image("platform", "DefaultPlat.png"); unused now
-        this.load.image("platCorner", "PlatCorner.png");
-        this.load.image("platSide", "PlatSide.png");
-        this.load.image("smallStar", "smallStar.png");
-        this.load.image("bigStar", "bigStar.png");
-        this.load.image("spaceBG", "SpaceBackground.png");
-    }
-
     create() {
+
+        // menu music
+        this.menuMusic = this.sound.add("menu");
+        this.menuMusic.play({volume: 0, loop: true});
+
+        this.musicFadeSpeed = 5000;     // in ms
+        this.musicEaseIn = 100;
+        this.maxVolume = 0.8;
+        
+        this.volTimer = this.time.addEvent({
+            delay: this.musicFadeSpeed / this.musicEaseIn,
+            repeat: this.musicEaseIn,
+            callback: () => { 
+                    let point = (this.musicEaseIn - this.volTimer.getRepeatCount()) / this.musicEaseIn;
+                    this.menuMusic.volume = this.square(point) * this.maxVolume; 
+
+                    if(this.volTimer.getRepeatCount() == 0) {
+                        this.volTimer.destroy() 
+                    }
+                },
+                callbackScope: this
+
+        })
 
         let menuConfig = {
             fontFamily: "Courier",
@@ -34,12 +46,20 @@ class Menu extends Phaser.Scene {
 
         // define keys
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
     }
 
     update() {
         if (Phaser.Input.Keyboard.JustDown(this.keySPACE)) {
-            this.scene.start('playScene'); 
+            this.scene.start("playScene"); 
+            this.menuMusic.stop();
+            this.sound.play("select"); 
         }
+
         
+    }
+
+    square(num) {
+        return num*num;
     }
 }

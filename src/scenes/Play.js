@@ -4,17 +4,26 @@ class Play extends Phaser.Scene {
     }
 
     init () {
-        // game stats
+        // player
         this.runnerX = 150;
-        this.moveSpeed = 200;
-        this.spawnPlat = undefined;
+        this.boundsLeeway = 50;
+
+        // speed
         this.particleSpeedMax = -430; 
+        this.moveSpeed = 250;
         this.speedFactor = 1;
         this.speedUpFrequency = 5;
-        this.maxSpeedFactor = 2.5;
+        this.maxSpeedFactor = 2;
         this.speedInterval = 0.2;
+
+        // platforms
+        this.spawnPlat = undefined;
         this.totalPlatformPredefs = 0;
-        this.boundsLeeway = 50;
+        
+        // music
+        this.musicFadeSpeed = 5000;     // in ms
+        this.musicEaseIn = 100;
+        this.maxVolume = 0.8;
 
         // global colors
         this.redHex = 0xFF153F;
@@ -28,6 +37,24 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        this.gameMusic = this.sound.add("inGame");
+        this.gameMusic.play({volume: 0, loop: true});
+
+        this.volTimer = this.time.addEvent({
+            delay: this.musicFadeSpeed / this.musicEaseIn,
+            repeat: this.musicEaseIn,
+            callback: () => { 
+                    let point = (this.musicEaseIn - this.volTimer.getRepeatCount()) / this.musicEaseIn;
+                    this.gameMusic.volume = this.square(point) * this.maxVolume; 
+
+                    if(this.volTimer.getRepeatCount() == 0) {
+                        this.volTimer.destroy() 
+                    }
+                },
+                callbackScope: this
+
+        })
+
         // space bg
         this.bg = this.add.tileSprite(0, 0, width, height, "spaceBG").setOrigin(0);
         this.bg.alpha = 0.08;
@@ -118,6 +145,8 @@ class Play extends Phaser.Scene {
         // checking for death
         // if blocked right or out of bounds
         if (this.runner.body.blocked.right || this.runner.y > height + this.boundsLeeway || this.runner.y + this.runner.height < 0 - this.boundsLeeway) {
+            this.gameMusic.stop();
+            this.sound.play("death");
             this.scene.pause();
             this.scene.launch("deathScene", {scene: this});
         }
@@ -132,6 +161,10 @@ class Play extends Phaser.Scene {
 
     conRightMost(container) {
         return container.x + container.width;
+    }
+
+    square(num) {
+        return num*num;
     }
     
 }

@@ -23,7 +23,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         this.jumpStrength = 650;
         this.jumpRecoil = 4;    // higher number = faster the runner stops when letting go of space
         this.gravity = 1650;
-        this.coyoteTime = 100; // in ms
+        this.coyoteTime = 80; // in ms
 
         // grav switching
         this.gravCooldownTime = 1000;  
@@ -63,7 +63,6 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
 class RunningState extends State {
     enter(scene, runner) {
         runner.setVelocity(0);
-        console.log("run")
     }
 
     execute(scene, runner) {
@@ -91,7 +90,7 @@ class JumpState extends State {
             runner.setVelocity(0, runner.jumpStrength);
         }
         
-        console.log("jump");
+        scene.sound.play("jump", {rate: Phaser.Math.FloatBetween(0.9, 1.2)});
     }
 
     execute(scene, runner) {
@@ -102,30 +101,20 @@ class JumpState extends State {
         }
 
         if (scene.runnerColor.state == "blue") {
-            
             if (runner.body.velocity.y >= 0) {
                 this.stateMachine.transition("falling");
                 return;
             }
-
         } else {
-            
             if (runner.body.velocity.y <= 0) {
                 this.stateMachine.transition("falling");
                 return;
             }
-
-        }
-
-        
+        } 
     }
 }
 
 class FallingState extends State {
-    enter(scene, runner) {
-        console.log("fall");
-    }
-
     execute(scene, runner) {
         if (scene.runnerColor.state == "blue") {
             if (runner.body.onFloor()) {
@@ -150,8 +139,10 @@ class RedState extends State {
     execute(scene, runner) {
         if (!runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
             this.stateMachine.transition("blue");
+            scene.sound.play("switch", {rate: Phaser.Math.FloatBetween(0.9, 1.2)});
         } else if (runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
             scene.shakeCamera(75, 0.005);
+            scene.sound.play("glassBreak", {rate: Phaser.Math.FloatBetween(0.9, 1.2)});
         }
     }
 }
@@ -171,8 +162,10 @@ class BlueState extends State {
     execute(scene, runner) {
         if (!runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
             this.stateMachine.transition("red");
+            scene.sound.play("switch", {rate: Phaser.Math.FloatBetween(0.9, 1.2)});
         } else if (runner.gravCooldown && Phaser.Input.Keyboard.JustDown(scene.keyE)) {
             scene.shakeCamera(75, 0.005);
+            scene.sound.play("glassBreak", {rate: Phaser.Math.FloatBetween(0.9, 1.2)});
         }
     }
 }
