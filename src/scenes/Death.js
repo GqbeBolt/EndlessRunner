@@ -31,13 +31,14 @@ class Death extends Phaser.Scene {
 
     update() {
         if (Phaser.Input.Keyboard.JustDown(this.keySPACE)) {
-            this.scene.start('playScene'); 
+            this.playScene.scene.start("playScene"); 
+            this.scene.stop();
         }
         
         if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-            console.log(this.playScene);
-            this.playScene.stop();
-            this.scene.start('menuScene'); 
+            console.log(this.playScene); 
+            this.playScene.scene.start("menuScene"); 
+            this.scene.stop();
         }
         
     }
