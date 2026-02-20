@@ -16,7 +16,7 @@ class Load extends Phaser.Scene {
             loadingBar.destroy();
         });
 
-        this.load.path = "./assets/images/"
+        this.load.path = "./assets/images/";
         this.load.image("runner", "RunnerTEMP.png");
         //this.load.image("platform", "DefaultPlat.png"); unused now
         this.load.image("platCorner", "PlatCorner.png");
@@ -25,7 +25,7 @@ class Load extends Phaser.Scene {
         this.load.image("bigStar", "bigStar.png");
         this.load.image("spaceBG", "spaceBackground.png");
 
-        this.load.path = "./assets/sounds/"
+        this.load.path = "./assets/sounds/";
         this.load.audio("glassBreak", "glassBreak.wav");    // Rosebugg (Freesound)
         this.load.audio("select", "blipSelect.wav");
         this.load.audio("jump", "jump.wav");
@@ -33,6 +33,9 @@ class Load extends Phaser.Scene {
         this.load.audio("death", "death.wav");
         this.load.audio("menu", "menuSoundtrack.mp3");    // Exploding Sun by Kyra van Meijl
         this.load.audio("inGame", "runningSoundtrack.mp3");    // Astral Float by Kyra van Meijl
+
+        this.load.path = "./assets/fonts/";
+        this.load.bitmapFont("pixelFont", "PixeledFont.png", "PixeledFont.xml"); // OmegaPC777 
     }
 
     create() {

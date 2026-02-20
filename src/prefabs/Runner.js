@@ -11,7 +11,8 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         scene.runnerState = new StateMachine("running", {
             running: new RunningState(),
             jumping: new JumpState(),
-            falling: new FallingState()
+            falling: new FallingState(),
+            coyote: new CoyoteState()
         }, [scene, this]);
 
         scene.runnerColor = new StateMachine("blue", {
@@ -67,17 +68,14 @@ class RunningState extends State {
 
     execute(scene, runner) {
         // handle transitions
-        
         if (Phaser.Input.Keyboard.JustDown(scene.keySPACE)) {
             this.stateMachine.transition("jumping");
             return;
         }
 
         if (Math.abs(runner.body.velocity.y) > 0.01) {
-            scene.time.delayedCall(runner.coyoteTime, () => {
-                this.stateMachine.transition("falling");
-            }, null, this);
-            
+            this.stateMachine.transition("coyote");
+            return;
         }
     }
 }
@@ -94,10 +92,9 @@ class JumpState extends State {
     }
 
     execute(scene, runner) {
-        if (Phaser.Input.Keyboard.JustUp(scene.keySPACE)) {
+        if (scene.keySPACE.isUp) {
             runner.setVelocityY(runner.body.velocity.y / runner.jumpRecoil);
             this.stateMachine.transition("falling");
-            console.log("exit jump");
             return;
         }
 
@@ -127,6 +124,21 @@ class FallingState extends State {
             }
         }
         
+    }
+}
+
+class CoyoteState extends State {
+    enter(scene, runner) {
+        scene.time.delayedCall(runner.coyoteTime, () => {
+            this.stateMachine.transition("falling");
+        }, null, this);
+    }
+
+    execute(scene, runner) {
+        if (Phaser.Input.Keyboard.JustDown(scene.keySPACE)) {
+            this.stateMachine.transition("jumping");
+            return;
+        }
     }
 }
 

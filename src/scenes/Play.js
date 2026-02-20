@@ -7,6 +7,7 @@ class Play extends Phaser.Scene {
         // player
         this.runnerX = 150;
         this.boundsLeeway = 150;
+        this.score = 0;
 
         // speed
         this.particleSpeedMax = -430; 
@@ -19,6 +20,7 @@ class Play extends Phaser.Scene {
 
         // platforms
         this.spawnPlat = undefined;
+        this.scorePlat = undefined;
         this.totalPlatformPredefs = 0;
         this.startXDist = 40;
         
@@ -39,6 +41,8 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+
+        // music
         this.gameMusic = this.sound.add("inGame");
         this.gameMusic.play({volume: 0, loop: true});
 
@@ -112,9 +116,14 @@ class Play extends Phaser.Scene {
         this.platSpawner = new PlatformSpawner(this, this.platforms);
         this.platSpawner.spawnStarting(this.moveSpeed);    // will also set spawnPlat
         this.platSpawner.addExtraDistance(this.startXDist);
+        this.scorePlat = this.spawnPlat;
 
         // set up colliders
         this.physics.add.collider(this.runner, this.platforms);
+
+        // score text
+        this.scoreText = this.add.bitmapText(width/2, 0, "pixelFont", `PLATFORMS SURVIVED: ${this.score}`, 15).setOrigin(0.5);
+        this.scoreText.setDepth(1000);
 
     }
 
@@ -128,8 +137,16 @@ class Play extends Phaser.Scene {
             if (this.conRightMost(plat) < 0) plat.destroy();
         })
 
+        // checking to update score when runner passes platforms
+        if (this.scorePlat.container.x + this.scorePlat.container.width < this.runnerX) {
+            console.log("Aa");
+            this.score++;
+            this.scoreText.setText(`PLATFORMS SURVIVED: ${this.score}`);
+        }
+
         // checking to spawn new platforms
         if (this.spawnPlat.container.x + this.spawnPlat.container.width < width) {
+            console.log("Spawning new")
             this.totalPlatformPredefs++;
 
             //checking to speed up
@@ -143,6 +160,7 @@ class Play extends Phaser.Scene {
                 })
             }
 
+            this.scorePlat = this.spawnPlat;
             this.platSpawner.spawnNew(this.moveSpeed * this.speedFactor);
         }
 

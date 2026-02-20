@@ -95,7 +95,7 @@ class PlatformSpawner {
             varYMin: -50,
             varWidthMax: 50,
             varWidthMin: -70,
-            name: "onlyBot",
+            name: "stairs",
             rightMost: 1
         }
 
@@ -109,22 +109,23 @@ class PlatformSpawner {
             varYMin: -10,
             varWidthMax: 50,
             varWidthMin: -70,
-            name: "onlyBot",
+            name: "stairsFlipped",
             rightMost: 1
         }
 
         let triple = {
             platforms: [
-                [650, -375, 200, 400, "red"],
-                [650, 162, 200, 50, "pink"],
-                [650, 350, 200, 450, "blue"]
+                [650, -375, 250, 400, "red"],
+                [675, 162, 200, 50, "pink"],
+                [650, 350, 250, 450, "blue"]
             ],
-            varYMax: 0,
-            varYMin: 0,
+            varYMax: 50,
+            varYMin: -50,
             varWidthMax: 50,
             varWidthMin: -25,
-            name: "onlyBot",
-            rightMost: 2
+            name: "triple",
+            rightMost: 2,
+            yLocked: [0, 2]
         }
 
         // adding all predefs to an array
@@ -153,7 +154,9 @@ class PlatformSpawner {
             info[0] += randXVar + this.platExtraDistance;
 
             // random y
-            info[1] += randYVar;
+            if (currPredef.yLocked != undefined && !currPredef.yLocked.includes(i)) {
+                info[1] += randYVar;
+            }
 
             // random width
             info[2] += randWVar;
