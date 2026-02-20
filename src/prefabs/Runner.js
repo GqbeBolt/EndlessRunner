@@ -22,7 +22,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         // jump / gravity
         this.jumpStrength = 600;
         this.jumpRecoil = 4;    // higher number = faster the runner stops when letting go of space
-        this.gravity = 1650;
+        this.gravity = 1300;
         this.coyoteTime = 80; // in ms
 
         // grav switching
@@ -97,6 +97,7 @@ class JumpState extends State {
         if (Phaser.Input.Keyboard.JustUp(scene.keySPACE)) {
             runner.setVelocityY(runner.body.velocity.y / runner.jumpRecoil);
             this.stateMachine.transition("falling");
+            console.log("exit jump");
             return;
         }
 

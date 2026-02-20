@@ -10,16 +10,17 @@ class Play extends Phaser.Scene {
 
         // speed
         this.particleSpeedMax = -430; 
-        this.moveSpeed = 250;
+        this.moveSpeed = 300;
         this.speedFactor = 1;
         this.speedUpFrequency = 5;
-        this.maxSpeedFactor = 2.5;
+        this.maxSpeedFactor = 2;
         this.speedInterval = 0.15;
-        this.distPerSpeedBoost = 10;    
+        this.distPerSpeedBoost = 30; 
 
         // platforms
         this.spawnPlat = undefined;
         this.totalPlatformPredefs = 0;
+        this.startXDist = 40;
         
         // music
         this.musicFadeSpeed = 5000;     // in ms
@@ -110,6 +111,7 @@ class Play extends Phaser.Scene {
         this.platforms = this.add.group();
         this.platSpawner = new PlatformSpawner(this, this.platforms);
         this.platSpawner.spawnStarting(this.moveSpeed);    // will also set spawnPlat
+        this.platSpawner.addExtraDistance(this.startXDist);
 
         // set up colliders
         this.physics.add.collider(this.runner, this.platforms);
@@ -134,9 +136,9 @@ class Play extends Phaser.Scene {
             if (this.speedFactor < this.maxSpeedFactor && this.totalPlatformPredefs % this.speedUpFrequency == 0) {
                 this.speedFactor += this.speedInterval;
                 this.platSpawner.addExtraDistance(this.distPerSpeedBoost);
+
                 // update current platforms
                 this.platforms.children.each( (plat) => {
-                    console.log((-this.moveSpeed * this.speedFactor));
                     plat.body.setVelocity(-this.moveSpeed * this.speedFactor, 0);
                 })
             }

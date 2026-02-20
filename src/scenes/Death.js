@@ -6,7 +6,6 @@ class Death extends Phaser.Scene {
     create(data) {
 
         this.playScene = data.scene;
-        console.log(this.playScene);
 
         let menuConfig = {
             fontFamily: "Courier",
