@@ -20,7 +20,7 @@ class Play extends Phaser.Scene {
 
         // platforms
         this.spawnPlat = undefined;
-        this.scorePlat = undefined;
+        this.scorePlatQ = new Queue();
         this.totalPlatformPredefs = 0;
         this.startXDist = 40;
         
@@ -38,6 +38,7 @@ class Play extends Phaser.Scene {
         // global keybinds
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
         this.keyE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.E);
+
     }
 
     create() {
@@ -116,7 +117,6 @@ class Play extends Phaser.Scene {
         this.platSpawner = new PlatformSpawner(this, this.platforms);
         this.platSpawner.spawnStarting(this.moveSpeed);    // will also set spawnPlat
         this.platSpawner.addExtraDistance(this.startXDist);
-        this.scorePlat = this.spawnPlat;
 
         // set up colliders
         this.physics.add.collider(this.runner, this.platforms);
@@ -138,15 +138,14 @@ class Play extends Phaser.Scene {
         })
 
         // checking to update score when runner passes platforms
-        if (this.scorePlat.container.x + this.scorePlat.container.width < this.runnerX) {
-            console.log("Aa");
+        if (!this.scorePlatQ.isEmpty() && this.scorePlatQ.peek().container.x + this.scorePlatQ.peek().container.width < this.runnerX) {
             this.score++;
             this.scoreText.setText(`PLATFORMS SURVIVED: ${this.score}`);
+            this.scorePlatQ.dequeue();
         }
 
         // checking to spawn new platforms
         if (this.spawnPlat.container.x + this.spawnPlat.container.width < width) {
-            console.log("Spawning new")
             this.totalPlatformPredefs++;
 
             //checking to speed up
@@ -160,7 +159,7 @@ class Play extends Phaser.Scene {
                 })
             }
 
-            this.scorePlat = this.spawnPlat;
+            this.scorePlatQ.enqueue(this.spawnPlat);
             this.platSpawner.spawnNew(this.moveSpeed * this.speedFactor);
         }
 
