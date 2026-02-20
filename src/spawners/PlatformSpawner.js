@@ -37,8 +37,8 @@ class PlatformSpawner {
 
         let moreConstrict = {
             platforms: [
-                [650, 235, 300, 50, "blue"],
-                [650, 80, 300, 50, "red"]
+                [650, 188, 300, 50, "blue"],
+                [650, 138, 300, 50, "red"]
             ],
             yVar: 75,
             varWidthMax: 100,
@@ -73,7 +73,7 @@ class PlatformSpawner {
         // randomly pick a predef
         let currPredef = Phaser.Math.RND.pick(this.preDefs);
 
-        let randXVar = Phaser.Math.Between(0, 50);
+        let randXVar = Phaser.Math.Between(0, 10);
 
         let randYVar = 0;
         if (currPredef.yVar != undefined) randYVar = Phaser.Math.Between(-currPredef.yVar, currPredef.yVar);
@@ -87,6 +87,7 @@ class PlatformSpawner {
         currPredef.platforms.forEach( (info) => {
             // random x
             info[0] += randXVar + this.platExtraDistance;
+            console.log(randXVar + this.platExtraDistance)
 
             // random y
             info[1] += randYVar;

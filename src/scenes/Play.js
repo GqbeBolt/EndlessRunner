@@ -13,9 +13,9 @@ class Play extends Phaser.Scene {
         this.moveSpeed = 250;
         this.speedFactor = 1;
         this.speedUpFrequency = 5;
-        this.maxSpeedFactor = 2;
-        this.speedInterval = 0.2;
-        this.distPerSpeedBoost = 20;    
+        this.maxSpeedFactor = 2.5;
+        this.speedInterval = 0.15;
+        this.distPerSpeedBoost = 10;    
 
         // platforms
         this.spawnPlat = undefined;
