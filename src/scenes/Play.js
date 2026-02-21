@@ -3,7 +3,7 @@ class Play extends Phaser.Scene {
         super("playScene");
     }
 
-    init () {
+    init() {
         // player
         this.runnerX = 150;
         this.boundsLeeway = 150;
@@ -16,7 +16,7 @@ class Play extends Phaser.Scene {
         this.speedUpFrequency = 5;
         this.maxSpeedFactor = 2;
         this.speedInterval = 0.15;
-        this.distPerSpeedBoost = 30; 
+        this.distPerSpeedBoost = 25; 
 
         // platforms
         this.spawnPlat = undefined;
@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
         // music
         this.musicFadeSpeed = 5000;     // in ms
         this.musicEaseIn = 100;
-        this.maxVolume = 0.8;
+        this.maxVolume = 0.1;
 
         // global colors
         this.redHex = 0xFF153F;
@@ -167,9 +167,10 @@ class Play extends Phaser.Scene {
         // if blocked right or out of bounds
         if (this.runner.body.blocked.right || this.runner.y > height + this.boundsLeeway || this.runner.y + this.runner.height < 0 - this.boundsLeeway) {
             this.gameMusic.stop();
+            this.scoreText.setVisible(false);
             this.sound.play("death");
             this.scene.pause();
-            this.scene.launch("deathScene", {scene: this});
+            this.scene.launch("deathScene", {scene: this, score: this.score});
         }
 
         this.bg.tilePositionX += 0.5 + this.speedFactor/4;           

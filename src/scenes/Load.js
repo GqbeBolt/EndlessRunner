@@ -24,6 +24,9 @@ class Load extends Phaser.Scene {
         this.load.image("smallStar", "smallStar.png");
         this.load.image("bigStar", "bigStar.png");
         this.load.image("spaceBG", "spaceBackground.png");
+        this.load.image("menuBG", "menuBackground.png");
+        this.load.image("title", "title.png");
+        this.load.image("border", "border.png");
 
         this.load.path = "./assets/sounds/";
         this.load.audio("glassBreak", "glassBreak.wav");    // Rosebugg (Freesound)

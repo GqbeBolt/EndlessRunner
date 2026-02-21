@@ -5,13 +5,18 @@ class Menu extends Phaser.Scene {
 
     create() {
 
+        //colors
+        this.redHex = 0xFF153F;
+        this.blueHex = 0x00FFF7;
+        this.pinkHex = 0xFACADE;
+
         // menu music
         this.menuMusic = this.sound.add("menu");
         this.menuMusic.play({volume: 0, loop: true});
 
         this.musicFadeSpeed = 5000;     // in ms
         this.musicEaseIn = 100;
-        this.maxVolume = 0.8;
+        this.maxVolume = 0.3;
         
         this.volTimer = this.time.addEvent({
             delay: this.musicFadeSpeed / this.musicEaseIn,
@@ -41,8 +46,68 @@ class Menu extends Phaser.Scene {
             fixedWidth: 0
         };
 
+        this.cameras.main.setBackgroundColor(0x2E242A);
+        
+        this.bg = this.add.tileSprite(0, 0, 600, 375, "menuBG").setOrigin(0);
+        this.bg.alpha = 0.2;
+
+        this.particleSpeedMax = -250;
+
+        let startLine = new Phaser.Geom.Line(width, 0, width, height)  
+        const deathBox = new Phaser.Geom.Rectangle(-1, 0, 1, height);
+        this.starEmitter = this.add.particles(0, 0, "smallStar", {
+            alpha: 1,
+            speedX: 0,
+            frequency: 350,
+            lifespan: 100000,
+            deathZone: deathBox,
+            tint: [ 0xffffff, this.pinkHex ],
+            emitZone: { 
+                type: 'random', 
+                source: startLine
+            },
+            blendMode: 'ADD',
+            emitCallback: (particle) => {
+                let a = Phaser.Math.FloatBetween(0.2, 0.7);
+
+                particle.alpha = a;
+                particle.velocityX = a * this.particleSpeedMax;
+            }
+        })
+
+        this.bigStarEmitter = this.add.particles(0, 0, "bigStar", {
+            alpha: 1,
+            speedX: 0,
+            frequency: 400,
+            lifespan: 100000,
+            deathZone: deathBox,
+            tint: [ 0xffffff, this.pinkHex ],
+            emitZone: { 
+                type: 'random', 
+                source: startLine
+            },
+            blendMode: 'ADD',
+            emitCallback: (particle) => {
+                let a = Phaser.Math.FloatBetween(0.05, 1);
+
+                particle.alpha = a;
+                particle.velocityX = a * this.particleSpeedMax;
+            }
+        })
+
+        this.b = this.add.image(0, 0, "border").setOrigin(0);
+        this.b.setTint(this.redHex, this.pinkHex, this.pinkHex, this.blueHex);
+        
+        this.add.image(width/2, 0, "title").setOrigin(0.5, 0);
+
         // display menu text
-        this.add.text(game.config.width/2, game.config.height/2, "Press SPACE", menuConfig).setOrigin(0.5);
+        this.add.bitmapText(width/2, height/2 + 70, "pixelFont", "[SPACE] to jump\n\n[E] to switch gravity", 14, 1).setOrigin(0.5);
+        this.add.bitmapText(width/2, 175, "pixelFont", "Press [SPACE] to START", 24).setOrigin(0.5);
+
+        this.add.rectangle(52, 223, 495, 5, 0x000000).setOrigin(0);
+        this.add.rectangle(50, 221, 495, 5, 0xFFFFFF).setOrigin(0);
+
+        this.add.bitmapText(width/2, 325, "pixelFont", "Music by Kyra van Meijl, Glass sfx by Rosebugg (Freesound), \n\nSpace Backgrounds from Deep-Fold, Code from GeeksForGeeks", 8, 1).setOrigin(0.5);
 
         // define keys
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -56,7 +121,7 @@ class Menu extends Phaser.Scene {
             this.sound.play("select"); 
         }
 
-        
+        this.bg.tilePositionX += 0.25;
     }
 
     square(num) {

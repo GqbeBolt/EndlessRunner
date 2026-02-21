@@ -92,9 +92,7 @@ class JumpState extends State {
     }
 
     execute(scene, runner) {
-        console.log(scene.keySPACE.isUp)
         if (scene.keySPACE.isUp) {
-            console.log("hety")
             runner.setVelocityY(runner.body.velocity.y / runner.jumpRecoil);
             this.stateMachine.transition("falling");
             return;
@@ -132,9 +130,7 @@ class FallingState extends State {
 class CoyoteState extends State {
     enter(scene, runner) {
         scene.time.delayedCall(runner.coyoteTime, () => {
-            if (this.stateMachine.state != "jumping") {
-                this.stateMachine.transition("falling");
-            }
+            if (this.stateMachine.state != "jumping") this.stateMachine.transition("falling");
         }, null, this);
     }
 
