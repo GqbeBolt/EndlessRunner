@@ -20,6 +20,9 @@ class Instruction extends Phaser.Scene {
         })
         .on("pointerover", () => {this.backText.setTint(this.pinkHex)})
         .on("pointerout", () => {this.backText.setTint(0xFFFFFF)});
+
+        this.add.bitmapText(width/2, 155, "pixelFont", "[SPACE] to jump\n\n[E] to swap gravity\n\n\nHolding [SPACE] will jump higher\n\nThere is a 1 sec cooldown\n\non gravity switching", 13, 1).setOrigin(0.5);
+
     }
 
     update() {
