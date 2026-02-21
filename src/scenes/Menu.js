@@ -113,8 +113,7 @@ class Menu extends Phaser.Scene {
 
         this.instructionText = this.add.bitmapText(width/2, 225, "pixelFont", "INSTRUCTIONS", 24).setOrigin(0.5).setInteractive(new Phaser.Geom.Rectangle(-5, 10, 275, 50), Phaser.Geom.Rectangle.Contains)
         .on("pointerdown", () => {
-            this.scene.start("playScene"); 
-            this.menuMusic.stop();
+            this.scene.launch("instructionScene", {scene: this});
             this.sound.play("select");
         })
         .on("pointerover", () => {this.instructionText.setTint(this.pinkHex)})
@@ -122,12 +121,13 @@ class Menu extends Phaser.Scene {
 
         this.creditsText = this.add.bitmapText(width/2, 275, "pixelFont", "CREDITS", 24).setOrigin(0.5).setInteractive(new Phaser.Geom.Rectangle(-5, 10, 165, 50), Phaser.Geom.Rectangle.Contains)
         .on("pointerdown", () => {
-            this.scene.start("playScene"); 
-            this.menuMusic.stop();
+            this.scene.launch("creditsScene", {scene: this});
             this.sound.play("select");
         })
         .on("pointerover", () => {this.creditsText.setTint(this.pinkHex)})
         .on("pointerout", () => {this.creditsText.setTint(0xFFFFFF)});
+
+        this.buttons = this.add.group([this.startText, this.instructionText, this.creditsText]);
         
         // start line
         this.add.rectangle(width/2 - 3, 227, 300, 5, 0x000000).setOrigin(0.5);
@@ -145,16 +145,21 @@ class Menu extends Phaser.Scene {
     }
 
     update() {
-        if (Phaser.Input.Keyboard.JustDown(this.keySPACE)) {
-            this.scene.start("playScene"); 
-            this.menuMusic.stop();
-            this.sound.play("select"); 
-        }
-
         this.bg.tilePositionX += 0.25;
     }
 
     square(num) {
         return num*num;
+    }
+
+    setButtonsInteractive(bool) {
+        this.buttons.children.each((button) => {
+            if (bool){
+                button.setInteractive();
+            } else {
+                button.disableInteractive();
+            }
+            
+        })
     }
 }

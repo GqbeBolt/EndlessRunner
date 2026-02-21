@@ -26,7 +26,7 @@ let config = {
         }
     },
     fps: 60,
-    scene: [ Load, Menu, Play, Death ],
+    scene: [ Load, Menu, Play, Death, Instruction, Credits ],
 };
 
 let game = new Phaser.Game(config);
