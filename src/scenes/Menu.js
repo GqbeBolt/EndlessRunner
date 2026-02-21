@@ -101,13 +101,43 @@ class Menu extends Phaser.Scene {
         this.add.image(width/2, 0, "title").setOrigin(0.5, 0);
 
         // display menu text
-        this.add.bitmapText(width/2, height/2 + 70, "pixelFont", "[SPACE] to jump\n\n[E] to switch gravity", 14, 1).setOrigin(0.5);
-        this.add.bitmapText(width/2, 175, "pixelFont", "Press [SPACE] to START", 24).setOrigin(0.5);
+        //this.add.bitmapText(width/2, height/2 + 70, "pixelFont", "[SPACE] to jump\n\n[E] to switch gravity", 14, 1).setOrigin(0.5);
+        this.startText = this.add.bitmapText(width/2, 175, "pixelFont", "START", 24).setOrigin(0.5).setInteractive(new Phaser.Geom.Rectangle(-5, 10, 135, 50), Phaser.Geom.Rectangle.Contains)
+        .on("pointerdown", () => {
+            this.scene.start("playScene"); 
+            this.menuMusic.stop();
+            this.sound.play("select");
+        })
+        .on("pointerover", () => {this.startText.setTint(this.pinkHex)})
+        .on("pointerout", () => {this.startText.setTint(0xFFFFFF)});
 
-        this.add.rectangle(52, 223, 495, 5, 0x000000).setOrigin(0);
-        this.add.rectangle(50, 221, 495, 5, 0xFFFFFF).setOrigin(0);
+        this.instructionText = this.add.bitmapText(width/2, 225, "pixelFont", "INSTRUCTIONS", 24).setOrigin(0.5).setInteractive(new Phaser.Geom.Rectangle(-5, 10, 275, 50), Phaser.Geom.Rectangle.Contains)
+        .on("pointerdown", () => {
+            this.scene.start("playScene"); 
+            this.menuMusic.stop();
+            this.sound.play("select");
+        })
+        .on("pointerover", () => {this.instructionText.setTint(this.pinkHex)})
+        .on("pointerout", () => {this.instructionText.setTint(0xFFFFFF)});
 
-        this.add.bitmapText(width/2, 325, "pixelFont", "Music by Kyra van Meijl, Glass sfx by Rosebugg (Freesound), \n\nSpace Backgrounds from Deep-Fold, Code from GeeksForGeeks", 8, 1).setOrigin(0.5);
+        this.creditsText = this.add.bitmapText(width/2, 275, "pixelFont", "CREDITS", 24).setOrigin(0.5).setInteractive(new Phaser.Geom.Rectangle(-5, 10, 165, 50), Phaser.Geom.Rectangle.Contains)
+        .on("pointerdown", () => {
+            this.scene.start("playScene"); 
+            this.menuMusic.stop();
+            this.sound.play("select");
+        })
+        .on("pointerover", () => {this.creditsText.setTint(this.pinkHex)})
+        .on("pointerout", () => {this.creditsText.setTint(0xFFFFFF)});
+        
+        // start line
+        this.add.rectangle(width/2 - 3, 227, 300, 5, 0x000000).setOrigin(0.5);
+        this.add.rectangle(width/2 - 5, 225, 300, 5, 0xFFFFFF).setOrigin(0.5);
+
+        // instruction line
+        this.add.rectangle(width/2 - 3, 277, 300, 5, 0x000000).setOrigin(0.5);
+        this.add.rectangle(width/2 - 5, 275, 300, 5, 0xFFFFFF).setOrigin(0.5);
+
+        //this.add.bitmapText(width/2, 325, "pixelFont", "Music by Kyra van Meijl, Glass sfx by Rosebugg (Freesound), \n\nSpace Backgrounds from Deep-Fold, Code from GeeksForGeeks", 8, 1).setOrigin(0.5);
 
         // define keys
         this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);

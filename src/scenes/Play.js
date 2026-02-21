@@ -166,8 +166,8 @@ class Play extends Phaser.Scene {
         // checking for death
         // if blocked right or out of bounds
         if (this.runner.body.blocked.right || this.runner.y > height + this.boundsLeeway || this.runner.y + this.runner.height < 0 - this.boundsLeeway) {
+            this.scoreText.setText(`FINAL PLATFORMS SURVIVED: ${this.score}`);
             this.gameMusic.stop();
-            this.scoreText.setVisible(false);
             this.sound.play("death");
             this.scene.pause();
             this.scene.launch("deathScene", {scene: this, score: this.score});
