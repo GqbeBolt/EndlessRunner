@@ -21,7 +21,7 @@ class Credits extends Phaser.Scene {
         .on("pointerover", () => {this.backText.setTint(this.pinkHex)})
         .on("pointerout", () => {this.backText.setTint(0xFFFFFF)});
 
-        this.add.bitmapText(width/2, 155, "pixelFont", "Music: Kyra van Meijl\n\nGlass SFX: Rosebugg (Freesound), \n\nSpace Backgrounds: Pixel Space\n\n Background Generator by Deep-Fold\n\nCharacter Template: Hayden Zegley\n\nCode: GeeksForGeeks", 12, 1).setOrigin(0.5);
+        this.add.bitmapText(width/2, 155, "pixelFont", "Music: Kyra van Meijl\n\nGlass SFX: Rosebugg (Freesound), \n\nSpace Backgrounds: Pixel Space\n\n Background Generator by Deep-Fold\n\nCharacter Template: Hayden Zegley\n\nCode: GeeksForGeeks\n\nFont: OmegaPC777", 12, 1).setOrigin(0.5);
     }
 
     update() {

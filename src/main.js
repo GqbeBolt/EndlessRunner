@@ -1,7 +1,7 @@
 /*
 Name: Gabriel Rybolt
 Game Name: Duality
-Time Spent: 17 hours
+Time Spent: 28 hours
 Citations:  Queue code from GeeksForGeeks
             Link: https://www.geeksforgeeks.org/javascript/implementation-queue-javascript/
 Creative Tilt: 
