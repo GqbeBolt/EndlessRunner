@@ -31,7 +31,7 @@ class Play extends Phaser.Scene {
 
         // global colors
         this.redHex = 0xFF153F;
-        this.blueHex = 0X00FFF7;
+        this.blueHex = 0x00FFF7;
         this.pinkHex = 0xFACADE;
         this.cameras.main.setBackgroundColor(0x2E242A);
 
@@ -140,7 +140,7 @@ class Play extends Phaser.Scene {
         // checking to update score when runner passes platforms
         if (!this.scorePlatQ.isEmpty() && this.scorePlatQ.peek().container.x + this.scorePlatQ.peek().container.width < this.runnerX) {
             this.score++;
-            this.scoreText.setText(`PLATFORMS SURVIVED: ${this.score}`);
+            this.scoreText.setText(`PLATFORMS SURVIVED ${this.score}`);
             this.scorePlatQ.dequeue();
         }
 
@@ -166,11 +166,12 @@ class Play extends Phaser.Scene {
         // checking for death
         // if blocked right or out of bounds
         if (this.runner.body.blocked.right || this.runner.y > height + this.boundsLeeway || this.runner.y + this.runner.height < 0 - this.boundsLeeway) {
-            this.scoreText.setText(`FINAL PLATFORMS SURVIVED: ${this.score}`);
+            this.scoreText.setVisible(false);
             this.gameMusic.stop();
             this.sound.play("death");
             this.scene.pause();
-            this.scene.launch("deathScene", {scene: this, score: this.score});
+
+            this.scene.launch("deathScene", {scene: this, score: this.score, camera: undefined});
         }
 
         this.bg.tilePositionX += 0.5 + this.speedFactor/4;           
