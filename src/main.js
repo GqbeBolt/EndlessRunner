@@ -18,11 +18,11 @@ let config = {
     width: 600,
     height: 375,
     pixelArt: true,
-    zoom: 2,
+    zoom: 1.5,
     physics: {
         default: "arcade",
         arcade: {
-            debug: true
+            debug: false
         }
     },
     fps: 60,
