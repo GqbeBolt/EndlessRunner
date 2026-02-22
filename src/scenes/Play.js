@@ -27,7 +27,7 @@ class Play extends Phaser.Scene {
         // music
         this.musicFadeSpeed = 5000;     // in ms
         this.musicEaseIn = 100;
-        this.maxVolume = 0.1;
+        this.maxVolume = 0.3;
 
         // global colors
         this.redHex = 0xFF153F;
@@ -140,7 +140,7 @@ class Play extends Phaser.Scene {
         // checking to update score when runner passes platforms
         if (!this.scorePlatQ.isEmpty() && this.scorePlatQ.peek().container.x + this.scorePlatQ.peek().container.width < this.runnerX) {
             this.score++;
-            this.scoreText.setText(`PLATFORMS SURVIVED ${this.score}`);
+            this.scoreText.setText(`PLATFORMS SURVIVED: ${this.score}`);
             this.scorePlatQ.dequeue();
         }
 

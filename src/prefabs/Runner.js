@@ -5,8 +5,17 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         // add object to existing scene
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        
-        //this.body.setCollideWorldBounds(true);
+        this.body.setSize(28, 28);
+        this.body.setOffset(2, 6);
+
+        // other vars
+        this.justSpawned = true;
+        this.color = "blue";
+
+        scene.runnerColor = new StateMachine("blue", {
+            red: new RedState(),
+            blue: new BlueState()
+        }, [scene, this])
         
         scene.runnerState = new StateMachine("running", {
             running: new RunningState(),
@@ -15,11 +24,6 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
             coyote: new CoyoteState()
         }, [scene, this]);
 
-        scene.runnerColor = new StateMachine("blue", {
-            red: new RedState(),
-            blue: new BlueState()
-        }, [scene, this])
-    
         // jump / gravity
         this.jumpStrength = 600;
         this.jumpRecoil = 4;    // higher number = faster the runner stops when letting go of space
@@ -34,13 +38,12 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         // colors
         this.redTint = scene.redHex;
         this.blueTint = scene.blueHex;
-        this.flashTint = scene.pinkHex;
+        this.flashTint = 0xc4628b;
 
-        // other
-        this.justSpawned = true;
+        
     }
 
-    initGravCooldown(prevTint, scene) {
+    initGravCooldown(scene) {
         this.gravCooldown = true;
         this.cooldownTimer = scene.time.delayedCall(this.gravCooldownTime, () => {
             this.gravCooldown = false;
@@ -48,10 +51,10 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
         this.flashingTimer = scene.time.addEvent({
             delay: this.gravCooldownTime / (this.numFlashes*2),
             callback: () => {
-                if (this.tintTopLeft == prevTint) {
+                if (this.tintTopLeft == 0xFFFFFF) {
                     this.setTint(this.flashTint);
                 } else {
-                    this.setTint(prevTint);
+                    this.setTint(0xFFFFFF);
                 }
             },
             callbackScope: this,
@@ -64,6 +67,7 @@ class Runner extends Phaser.Physics.Arcade.Sprite {
 class RunningState extends State {
     enter(scene, runner) {
         runner.setVelocity(0);
+        runner.anims.play(`${runner.color}-run`)
     }
 
     execute(scene, runner) {
@@ -87,7 +91,7 @@ class JumpState extends State {
         } else {
             runner.setVelocity(0, runner.jumpStrength);
         }
-        
+        runner.anims.play(`${runner.color}-jump`)
         scene.sound.play("jump", {rate: Phaser.Math.FloatBetween(0.9, 1.2)});
     }
 
@@ -113,6 +117,10 @@ class JumpState extends State {
 }
 
 class FallingState extends State {
+    enter(scene, runner) {
+        runner.anims.play(`${runner.color}-fall`)
+    }
+
     execute(scene, runner) {
         if (scene.runnerColor.state == "blue") {
             if (runner.body.onFloor()) {
@@ -145,8 +153,10 @@ class CoyoteState extends State {
 class RedState extends State {
     enter(scene, runner) {
         runner.body.setGravityY(-Math.abs(runner.gravity));
-        runner.setTint(runner.redTint);
-        runner.initGravCooldown(runner.redTint, scene);
+        runner.initGravCooldown(scene);
+        runner.setFlipY(true);
+        runner.body.setOffset(2, 0);
+        runner.color = "red";
     }
 
     execute(scene, runner) {
@@ -163,13 +173,14 @@ class RedState extends State {
 class BlueState extends State {
     enter(scene, runner) {
         runner.body.setGravityY(Math.abs(runner.gravity));
-        runner.setTint(runner.blueTint);
+        runner.setFlipY(false);
+        runner.body.setOffset(2, 6);
         if (!runner.justSpawned) {
-            runner.initGravCooldown(runner.blueTint, scene);
+            runner.initGravCooldown(scene);
         } else {
             runner.justSpawned = false;
         }
-         
+        runner.color = "blue";
     }
 
     execute(scene, runner) {

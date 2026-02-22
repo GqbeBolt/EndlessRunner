@@ -17,7 +17,7 @@ class Load extends Phaser.Scene {
         });
 
         this.load.path = "./assets/images/";
-        this.load.image("runner", "RunnerTEMP.png");
+        //this.load.image("runner", "RunnerTEMP.png");
         //this.load.image("platform", "DefaultPlat.png"); unused now
         this.load.image("platCorner", "PlatCorner.png");
         this.load.image("platSide", "PlatSide.png");
@@ -29,6 +29,11 @@ class Load extends Phaser.Scene {
         this.load.image("border", "border.png");
         this.load.image("textBG", "textBackground.png");
         this.load.image("gameOver", "gameOver.png");
+
+        this.load.spritesheet("runner", "runner.png", {
+            frameWidth: 30,
+            frameHeight: 36
+        })
 
         this.load.path = "./assets/sounds/";
         this.load.audio("glassBreak", "glassBreak.wav");    // Rosebugg (Freesound)
@@ -44,6 +49,49 @@ class Load extends Phaser.Scene {
     }
 
     create() {
+
+        this.anims.create({
+            key: "blue-run",
+            frameRate: 12,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers("runner", {start: 0, end: 7})
+        })
+
+        this.anims.create({
+            key: "blue-jump",
+            frameRate: 12,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers("runner", {start: 8, end: 8})
+        })
+
+        this.anims.create({
+            key: "blue-fall",
+            frameRate: 12,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers("runner", {start: 9, end: 9})
+        })
+
+        this.anims.create({
+            key: "red-run",
+            frameRate: 12,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers("runner", {start: 10, end: 18})
+        })
+
+        this.anims.create({
+            key: "red-jump",
+            frameRate: 12,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers("runner", {start: 18, end: 18})
+        })
+
+        this.anims.create({
+            key: "red-fall",
+            frameRate: 12,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers("runner", {start: 19, end: 19})
+        })
+
         this.scene.start("menuScene")
     }
 }
